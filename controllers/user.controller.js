@@ -1,7 +1,6 @@
 "use strict";
 const userModel = require("../models/user.model.js");
 
-
 module.exports.setPosts = async (req, res) => {
     try {
         const { name, postname, email, password } = req.body;
@@ -10,13 +9,22 @@ module.exports.setPosts = async (req, res) => {
         } else if (!email) {
             return res.status(400).json({ message: "Merci d'ajouter l'email" });
         } else if (!postname) {
-            return res.status(400).json({ message: "Merci d'ajouter un postnom" });
+            return res
+                .status(400)
+                .json({ message: "Merci d'ajouter un postnom" });
         } else if (!password) {
             console.error("Il y a une erreur");
-            return res.status(400).json({ message: "Merci d'ajouter le mot de passe" });
+            return res
+                .status(400)
+                .json({ message: "Merci d'ajouter le mot de passe" });
         }
 
-        const newPost = await userModel.create({ name, postname, email, password });
+        const newPost = await userModel.create({
+            name,
+            postname,
+            email,
+            password
+        });
         return res.status(201).json(newPost);
     } catch (err) {
         console.error(err);
@@ -38,4 +46,31 @@ module.exports.getPosts = async (req, res) => {
                 "Une erreur s'est produite lors de la récupération des utilisateurs"
         });
     }
+};
+module.exports.editPosts = async (req, res) => {
+    const userId = req.params.id;
+    const { name, postname, password } = req.body;
+    userModel
+        .findByPk(userId)
+        .then(user => {
+            if (!user) {
+                res.status(404).json({ error: "Utilisateur non trouvé" });
+            } else {
+                user.name = name;
+
+                return user.save();
+            }
+        })
+        .then(updatedUser => {
+            res.json(updatedUser);
+        })
+        .catch(err => {
+            console.error(
+                "Erreur lors de la mise à jour de l'utilisateur :",
+                err
+            );
+            res.status(500).json({
+                error: "Erreur lors de la mise à jour de l'utilisateur"
+            });
+        });
 };
