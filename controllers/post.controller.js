@@ -38,21 +38,20 @@ module.exports.getPosts = async (req, res) => {
 module.exports.editPosts = async (req, res) => {
     const postId = req.params.id;
     const { posts } = req.body;
+    postModel
+        .findByPk(postId)
+        .then(post => {
+            if (!post)
+                res.status(500).json({ message: `le poste n'existe pas` });
 
-    try {
-        const poster = await postModel.findByPk(postId);
-
-        if (!poster) {
-            return res.status(404).json({ error: "Post non trouvé" });
-        }
-
-        poster.post = posts;
-        const updatedPost = await poster.save();
-
-        return res.json(updatedPost);
-    } catch (err) {
-        console.error("Erreur lors de la mise à jour du post :", err);
-        return res.status(500).json({ error: "Erreur lors de la mise à jour du post" });
-    }
+            post.posts = posts;
+            return post.save();
+        })
+        .then(updatePost => {
+            res.json(updatePost);
+        }).catch(err=>{
+          res.status(500).send(err)
+          console.error(err)
+        })
 };
 module.exports.deletePosts = async (req, res) => {};
