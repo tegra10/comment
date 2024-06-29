@@ -1,12 +1,19 @@
 const express = require("express");
 const Router = express.Router();
 const {
-    setPosts,
-    getPosts,
-    editPosts
+    setUsers,
+    getUsers,
+    editUsers,
+    deleteUsers
 } = require("../controllers/user.controller.js");
-Router.post("/", setPosts);
-Router.get("/", getPosts);
-Router.put("/:id", editPosts);
+
+
+
+// requettes liées à l'utilisateur
+Router.post("/", setUsers);
+Router.get("/", getUsers);
+Router.put("/edit-user/:id", editUsers);
+Router.delete("/delete-user/:id", deleteUsers);
+
 
 module.exports = Router;

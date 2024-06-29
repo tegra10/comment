@@ -18,7 +18,8 @@ const User = sequelize.define(
                 this.setDataValue("name", value.trim());
             }
         },
-        postname:{      type: DataTypes.STRING,
+        postname: {
+            type: DataTypes.STRING,
             allowNull: false,
             set(value) {
                 this.setDataValue("postname", value.trim());
@@ -54,6 +55,8 @@ const User = sequelize.define(
     }
 );
 
+//model centré sur les posts
+
 // Hook pour saler et hasher le mot de passe avant de sauvegarder un nouvel utilisateur
 User.beforeCreate(async (user, options) => {
     const saltRounds = 10;
@@ -62,3 +65,4 @@ User.beforeCreate(async (user, options) => {
 });
 
 module.exports = User;
+

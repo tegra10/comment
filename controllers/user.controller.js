@@ -1,7 +1,7 @@
 "use strict";
 const userModel = require("../models/user.model.js");
 
-module.exports.setPosts = async (req, res) => {
+module.exports.setUsers = async (req, res) => {
     try {
         const { name, postname, email, password } = req.body;
         if (!name) {
@@ -31,7 +31,7 @@ module.exports.setPosts = async (req, res) => {
         return res.status(500).send({ err });
     }
 };
-module.exports.getPosts = async (req, res) => {
+module.exports.getUsers = async (req, res) => {
     try {
         const users = await userModel.findAll();
         if (!users || users.length === 0) {
@@ -47,7 +47,7 @@ module.exports.getPosts = async (req, res) => {
         });
     }
 };
-module.exports.editPosts = async (req, res) => {
+module.exports.editUsers = async (req, res) => {
     const userId = req.params.id;
     const { name, postname, password } = req.body;
     userModel
@@ -57,7 +57,7 @@ module.exports.editPosts = async (req, res) => {
                 res.status(404).json({ error: "Utilisateur non trouvé" });
             } else {
                 user.name = name;
-
+                user.postname=postname
                 return user.save();
             }
         })
@@ -73,4 +73,23 @@ module.exports.editPosts = async (req, res) => {
                 error: "Erreur lors de la mise à jour de l'utilisateur"
             });
         });
+};
+
+module.exports.deleteUsers = async (req, res) => {
+  const userId = req.params.id
+  try{
+    userModel.findByPk(userId).then(user=>{
+      if(!user){
+        res.status(500).json({message:`utilisateur introuvable`})
+      }else{
+        return user.destroy()
+      }
+      
+    }).then(()=>{
+      res.status(200).json({message:`utilisateur supprimé`})
+    })
+    
+  }catch(err){
+    console.error(err)
+  }
 };
