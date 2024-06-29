@@ -54,4 +54,21 @@ module.exports.editPosts = async (req, res) => {
           console.error(err)
         })
 };
-module.exports.deletePosts = async (req, res) => {};
+module.exports.deletePosts = async (req, res) => {
+   const postId = req.params.id
+  try{
+    postModel.findByPk(postId).then(post=>{
+      if(!post)
+        res.status(500).json({message:`post introuvable`})
+      
+      return post.destroy()
+      
+      
+    }).then(()=>{
+      res.status(200).json({message:`post supprimé`})
+    })
+    
+  }catch(err){
+    console.error(err)
+  }
+};
