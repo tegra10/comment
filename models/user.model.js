@@ -50,12 +50,8 @@ const User = sequelize.define(
     },
     {
         timestamps: true,
-        createdAt: true,
-        updatedAt: true
     }
 );
-
-//model centré sur les posts
 
 // Hook pour saler et hasher le mot de passe avant de sauvegarder un nouvel utilisateur
 User.beforeCreate(async (user, options) => {
@@ -64,5 +60,10 @@ User.beforeCreate(async (user, options) => {
     user.password = hashedPassword;
 });
 
-module.exports = User;
+// Méthode pour vérifier le mot de passe
+User.prototype.verifyPassword = async function (password) {
+    const isValid = await bcrypt.compare(password, this.password);
+    return isValid;
+};
 
+module.exports = User;
