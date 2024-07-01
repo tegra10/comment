@@ -1,6 +1,8 @@
 "use strict";
 const userModel = require("../models/user.model.js");
 
+// création d'utilisateurs
+
 module.exports.setUsers = async (req, res) => {
     try {
         const { name, postname, email, password } = req.body;
@@ -31,9 +33,11 @@ module.exports.setUsers = async (req, res) => {
         return res.status(500).send({ err });
     }
 };
+
+// recuperation des données sur l'utilisateurs
 module.exports.getUsers = async (req, res) => {
     try {
-        const users = await userModel.findAll();
+        const users = await userModel.findAll({ attributes: { exclude:["password"] }});
         if (!users || users.length === 0) {
             res.status(404).json({ message: "Aucun utilisateur trouvé" });
         } else {
@@ -47,6 +51,33 @@ module.exports.getUsers = async (req, res) => {
         });
     }
 };
+
+// recuperer les données d'un utilisateur particulier
+
+module.exports.getOneUser = async (req, res) => {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).json({ message: "ID utilisateur manquant" });
+    }
+
+    try {
+        const user = await userModel.findByPk(id, {
+            attributes: { exclude: ["password"] }
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        return res.status(200).json(user);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Une erreur est survenue" });
+    }
+};
+
+// mise à jour du contenu de l'Utilisateur
 module.exports.editUsers = async (req, res) => {
     const userId = req.params.id;
     const { name, postname, password } = req.body;
@@ -57,7 +88,7 @@ module.exports.editUsers = async (req, res) => {
                 res.status(404).json({ error: "Utilisateur non trouvé" });
             } else {
                 user.name = name;
-                user.postname=postname
+                user.postname = postname;
                 return user.save();
             }
         })
@@ -75,21 +106,25 @@ module.exports.editUsers = async (req, res) => {
         });
 };
 
+// suppressin de l'utilisateur
 module.exports.deleteUsers = async (req, res) => {
-  const userId = req.params.id
-  try{
-    userModel.findByPk(userId).then(user=>{
-      if(!user){
-        res.status(500).json({message:`utilisateur introuvable`})
-      }else{
-        return user.destroy()
-      }
-      
-    }).then(()=>{
-      res.status(200).json({message:`utilisateur supprimé`})
-    })
-    
-  }catch(err){
-    console.error(err)
-  }
+    const userId = req.params.id;
+    try {
+        userModel
+            .findByPk(userId)
+            .then(user => {
+                if (!user) {
+                    res.status(500).json({
+                        message: `utilisateur introuvable`
+                    });
+                } else {
+                    return user.destroy();
+                }
+            })
+            .then(() => {
+                res.status(200).json({ message: `utilisateur supprimé` });
+            });
+    } catch (err) {
+        console.error(err);
+    }
 };
