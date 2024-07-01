@@ -23,6 +23,10 @@ const Comment = sequelize.define(
             set(value) {
                 this.setDataValue("posts", value.trim());
             }
+        },
+              picture: {
+            type: DataTypes.STRING,
+            defaultValue: "photo.jpg"
         }
     },
     {
