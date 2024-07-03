@@ -1,6 +1,7 @@
 "use strict";
 const userModel = require("../models/user.model.js");
 
+const { logupErrors } = require("../utils/user.errors.js");
 // création d'utilisateurs
 
 module.exports.setUsers = async (req, res) => {
@@ -29,15 +30,19 @@ module.exports.setUsers = async (req, res) => {
         });
         return res.status(201).json(newPost);
     } catch (err) {
-        console.error(err);
-        return res.status(500).send({ err });
+        const errors = logupErrors(err);
+
+        return res.status(500).send({ errors });
+        // return res.status(500).send({ err });
     }
 };
 
 // recuperation des données sur l'utilisateurs
 module.exports.getUsers = async (req, res) => {
     try {
-        const users = await userModel.findAll({ attributes: { exclude:["password"] }});
+        const users = await userModel.findAll({
+            attributes: { exclude: ["password"] }
+        });
         if (!users || users.length === 0) {
             res.status(404).json({ message: "Aucun utilisateur trouvé" });
         } else {
