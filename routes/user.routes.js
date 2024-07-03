@@ -8,6 +8,10 @@ const {
     deleteUsers
 } = require("../controllers/user.controller.js");
 
+const {uploadProfile}=require('../controllers/upload.controller.js')
+const multer = require("multer");
+const upload = multer();
+
 const { login, logout } = require("../auth/user.auth.js");
 
 // requettes liées à l'utilisateur
@@ -21,5 +25,7 @@ Router.delete("/delete-user/:id", deleteUsers);
 
 Router.post("/login", login);
 Router.get("/logout", logout);
+
+Router.post("/upload", upload.single("file"), uploadProfile);
 
 module.exports = Router;
