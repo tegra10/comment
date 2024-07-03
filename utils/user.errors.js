@@ -14,3 +14,11 @@ module.exports.logupErrors = err => {
     }
     return errors;
 };
+
+module.exports.signinErrors = err => {
+    let errors = { email: "", password: "" };
+
+    if (err.message.includes("email")) errors.email = "email inconnu";
+
+    if (err.message.includes("password")) errors.email = "mot de passe incorrect";
+};

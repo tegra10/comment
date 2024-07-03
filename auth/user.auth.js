@@ -1,6 +1,7 @@
 "use strict";
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user.model.js");
+const {signinErrors}=require('../utils/user.errors.js')
 const cookieToken = process.env.TOKEN;
 const maxAge = 3600000;
 
@@ -34,8 +35,8 @@ module.exports.login = async (req, res) => {
         res.cookie("token", token, { httpOnly: true, maxAge }); // 1 heure
         return res.status(201).json({ user: user.id });
     } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Une erreur est survenue" });
+        const errors = signinErrors(err)
+        return res.status(500).json({ errors });
     }
 };
 
