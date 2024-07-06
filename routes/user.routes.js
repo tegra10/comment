@@ -8,7 +8,7 @@ const {
     deleteUsers
 } = require("../controllers/user.controller.js");
 
-const {uploadProfile}=require('../controllers/upload.controller.js')
+const { uploadProfile } = require("../controllers/upload.controller.js");
 const multer = require("multer");
 const upload = multer();
 
