@@ -4,7 +4,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const Sequelize = require("sequelize");
+const multer =require( 'multer')
 const app = express();
+
 const sequelize = require("./config/config.js");
 const { checkUser, requireAuth } = require("./middleware/auth.middleware.js");
 

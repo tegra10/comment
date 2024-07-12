@@ -75,22 +75,3 @@ module.exports.deletePosts = async (req, res) => {
 
 
 
-module.exports.patchPosts = async (req, res) => {
-    const postId = req.params.id; // Récupérez l'ID du post depuis les paramètres de la requête
-    const userId = req.body.userId; // Récupérez l'ID de l'utilisateur qui aime depuis le corps de la requête
-
-    // Trouvez le post correspondant dans la base de données
-    const post = await postModel.findByPk(postId);
-
-    if (!post) {
-        return res.status(404).json({ message: 'Post non trouvé' });
-    }
-
-    let updatedLikes =  { users: [] }; // Initialisez un objet avec un tableau "users" vide
-    updatedLikes.users.push(userId); // Ajoutez le nouvel ID d'utilisateur au tableau "users"
-
-    // Mettez à jour la colonne "likes" dans la base de données avec les nouvelles données
-    await post.update({ likes: updatedLikes });
-
-    return res.status(200).json({ message: 'L\'utilisateur a aimé ce post' });
-};
