@@ -1,8 +1,8 @@
-"use strict";
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/config.js");
-const Comment = sequelize.define(
-    "posts",
+
+const Post = sequelize.define(
+    "Post",
     {
         id: {
             type: DataTypes.INTEGER,
@@ -13,29 +13,24 @@ const Comment = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: "users",
+                model: "User",
                 key: "id"
             }
         },
-        posts: {
+        post: {
             type: DataTypes.STRING,
             allowNull: false,
             set(value) {
-                this.setDataValue("posts", value.trim());
+                this.setDataValue("content", value.trim());
             }
         },
-        picture: {
-            type: DataTypes.STRING,
-            defaultValue: "photo.jpg"
-        },
-        likes:{
-          type:DataTypes.JSON
+        likes: {
+            type: DataTypes.INTEGER
         }
     },
     {
-        timestamps: true,
-        createdAt: true,
-        updatedAt: true
+        timestamps: true
     }
 );
-module.exports = Comment;
+
+module.exports = Post;

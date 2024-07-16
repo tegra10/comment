@@ -31,7 +31,7 @@ module.exports.setUsers = async (req, res) => {
         return res.status(201).json(newPost);
     } catch (err) {
         const errors = logupErrors(err);
-
+        console.error(err);
         return res.status(500).send({ errors });
         // return res.status(500).send({ err });
     }
@@ -49,6 +49,7 @@ module.exports.getUsers = async (req, res) => {
             res.status(200).json(users);
         }
     } catch (err) {
+      
         console.error("Erreur :", err);
         res.status(500).json({
             message:
